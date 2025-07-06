@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailwind Utilities - Vite Tailwind</title>
+    <script type="module" src="/@vite/client"></script>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body class="bg-gray-100 min-h-screen text-black">
+    <div class="container mx-auto px-4 py-8">
+      <section class="mb-12 text-black">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-2"
+        >
+          Typography
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/font-size"
+            target="_blank"
+            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Font Sizes</h3>
+            <div class="space-y-2">
+              <p class="text-xs">Extra Small (text-xs)</p>
+              <p class="text-sm">Small (text-sm)</p>
+              <p class="text-base">Base (text-base)</p>
+              <p class="text-lg">Large (text-lg)</p>
+              <p class="text-xl">Extra Large (text-xl)</p>
+              <p class="text-2xl">2XL (text-2xl)</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Font Weights</h3>
+            <div class="space-y-2">
+              <p class="font-thin">Thin (font-thin)</p>
+              <p class="font-light">Light (font-light)</p>
+              <p class="font-normal">Normal (font-normal)</p>
+              <p class="font-medium">Medium (font-medium)</p>
+              <p class="font-semibold">Semibold (font-semibold)</p>
+              <p class="font-bold">Bold (font-bold)</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Text Styles</h3>
+            <div class="space-y-2">
+              <p class="italic">Italic Text</p>
+              <p class="underline">Underlined Text</p>
+              <p class="line-through">Strikethrough Text</p>
+              <p class="uppercase">uppercase text</p>
+              <p class="lowercase">LOWERCASE TEXT</p>
+              <p class="capitalize">capitalize text</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-green-500 pb-2"
+        >
+          Colors
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/customizing-colors"
+            target="_blank"
+            class="inline-flex items-center text-green-600 hover:text-green-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Text Colors</h3>
+            <div class="space-y-2">
+              <p class="text-red-500">Red Text</p>
+              <p class="text-blue-500">Blue Text</p>
+              <p class="text-green-500">Green Text</p>
+              <p class="text-yellow-500">Yellow Text</p>
+              <p class="text-purple-500">Purple Text</p>
+              <p class="text-pink-500">Pink Text</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Background Colors</h3>
+            <div class="space-y-2">
+              <div class="bg-red-100 p-2 rounded">bg-red-100</div>
+              <div class="bg-blue-200 p-2 rounded">bg-blue-200</div>
+              <div class="bg-green-300 p-2 rounded">bg-green-300</div>
+              <div class="bg-yellow-200 p-2 rounded">bg-yellow-200</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Border Colors</h3>
+            <div class="space-y-2">
+              <div class="border-2 border-red-500 p-2 rounded">Red Border</div>
+              <div class="border-2 border-blue-500 p-2 rounded">
+                Blue Border
+              </div>
+              <div class="border-2 border-green-500 p-2 rounded">
+                Green Border
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Gradients</h3>
+            <div class="space-y-2">
+              <div
+                class="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded text-white"
+              >
+                Blue to Purple
+              </div>
+              <div
+                class="bg-gradient-to-br from-green-400 to-blue-600 p-2 rounded text-white"
+              >
+                Green to Blue
+              </div>
+              <div
+                class="bg-gradient-to-l from-pink-500 to-yellow-500 p-2 rounded text-white"
+              >
+                Pink to Yellow
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-purple-500 pb-2"
+        >
+          Layout & Spacing
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/display"
+            target="_blank"
+            class="inline-flex items-center text-purple-600 hover:text-purple-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Flexbox</h3>
+            <div class="space-y-4">
+              <div class="bg-gray-100 p-4 rounded">
+                <p class="text-sm mb-2">flex justify-between items-center</p>
+                <div
+                  class="flex justify-between items-center bg-blue-100 p-2 rounded"
+                >
+                  <span>Left</span>
+                  <span>Center</span>
+                  <span>Right</span>
+                </div>
+              </div>
+              <div class="bg-gray-100 p-4 rounded">
+                <p class="text-sm mb-2">flex flex-col items-center</p>
+                <div
+                  class="flex flex-col items-center bg-green-100 p-2 rounded"
+                >
+                  <span>Top</span>
+                  <span>Middle</span>
+                  <span>Bottom</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Grid</h3>
+            <div class="space-y-4">
+              <div class="bg-gray-100 p-4 rounded">
+                <p class="text-sm mb-2">grid grid-cols-3 gap-2</p>
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="bg-blue-200 p-2 rounded text-center">1</div>
+                  <div class="bg-blue-200 p-2 rounded text-center">2</div>
+                  <div class="bg-blue-200 p-2 rounded text-center">3</div>
+                </div>
+              </div>
+              <div class="bg-gray-100 p-4 rounded">
+                <p class="text-sm mb-2">grid grid-cols-2 gap-4</p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-green-200 p-2 rounded text-center">A</div>
+                  <div class="bg-green-200 p-2 rounded text-center">B</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-red-500 pb-2"
+        >
+          Interactive States
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/hover-focus-and-other-states"
+            target="_blank"
+            class="inline-flex items-center text-red-600 hover:text-red-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Hover Effects</h3>
+            <div class="space-y-3">
+              <button
+                class="w-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors"
+              >
+                Hover Me (Color Change)
+              </button>
+              <button
+                class="w-full bg-green-500 hover:scale-105 text-white py-2 px-4 rounded transition-transform"
+              >
+                Hover Me (Scale)
+              </button>
+              <button
+                class="w-full bg-purple-500 hover:shadow-lg text-white py-2 px-4 rounded transition-shadow"
+              >
+                Hover Me (Shadow)
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Focus States</h3>
+            <div class="space-y-3">
+              <input
+                type="text"
+                placeholder="Focus me"
+                class="w-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none p-2 rounded"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                class="w-full border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 focus:outline-none p-2 rounded"
+              />
+              <textarea
+                placeholder="Message"
+                class="w-full border-2 border-gray-300 focus:border-purple-500 focus:outline-none p-2 rounded h-20 resize-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Active States</h3>
+            <div class="space-y-3">
+              <button
+                class="w-full bg-red-500 active:bg-red-700 text-white py-2 px-4 rounded transition-colors"
+              >
+                Click Me (Active)
+              </button>
+              <button
+                class="w-full bg-yellow-500 active:scale-95 text-white py-2 px-4 rounded transition-transform"
+              >
+                Click Me (Scale Down)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-yellow-500 pb-2"
+        >
+          Shadows & Effects
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/box-shadow"
+            target="_blank"
+            class="inline-flex items-center text-yellow-600 hover:text-yellow-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h3 class="font-semibold mb-2">shadow-sm</h3>
+            <p class="text-gray-600">Small shadow</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="font-semibold mb-2">shadow-md</h3>
+            <p class="text-gray-600">Medium shadow</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="font-semibold mb-2">shadow-lg</h3>
+            <p class="text-gray-600">Large shadow</p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-xl">
+            <h3 class="font-semibold mb-2">shadow-xl</h3>
+            <p class="text-gray-600">Extra large shadow</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-pink-500 pb-2"
+        >
+          Animations
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/animation"
+            target="_blank"
+            class="inline-flex items-center text-pink-600 hover:text-pink-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="font-semibold mb-4">animate-bounce</h3>
+            <div
+              class="animate-bounce bg-blue-500 w-8 h-8 rounded-full mx-auto"
+            ></div>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="font-semibold mb-4">animate-spin</h3>
+            <div
+              class="animate-spin bg-green-500 w-8 h-8 rounded mx-auto"
+            ></div>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="font-semibold mb-4">animate-ping</h3>
+            <div
+              class="animate-ping bg-red-500 w-8 h-8 rounded-full mx-auto"
+            ></div>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="font-semibold mb-4">animate-pulse</h3>
+            <div
+              class="animate-pulse bg-purple-500 w-8 h-8 rounded-lg mx-auto"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-teal-500 pb-2"
+        >
+          Responsive Design
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/responsive-design"
+            target="_blank"
+            class="inline-flex items-center text-teal-600 hover:text-teal-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold mb-4">Responsive Grid Example</h3>
+          <p class="text-gray-600 mb-4">
+            This grid changes from 1 column on mobile, 2 on tablet, and 4 on
+            desktop:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              class="bg-gradient-to-br from-blue-400 to-blue-600 p-4 rounded-lg text-white text-center"
+            >
+              <h4 class="font-semibold">Item 1</h4>
+              <p class="text-sm">Responsive</p>
+            </div>
+            <div
+              class="bg-gradient-to-br from-green-400 to-green-600 p-4 rounded-lg text-white text-center"
+            >
+              <h4 class="font-semibold">Item 2</h4>
+              <p class="text-sm">Responsive</p>
+            </div>
+            <div
+              class="bg-gradient-to-br from-yellow-400 to-yellow-600 p-4 rounded-lg text-white text-center"
+            >
+              <h4 class="font-semibold">Item 3</h4>
+              <p class="text-sm">Responsive</p>
+            </div>
+            <div
+              class="bg-gradient-to-br from-purple-400 to-purple-600 p-4 rounded-lg text-white text-center"
+            >
+              <h4 class="font-semibold">Item 4</h4>
+              <p class="text-sm">Responsive</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-orange-500 pb-2"
+        >
+          Positioning
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/position"
+            target="_blank"
+            class="inline-flex items-center text-orange-600 hover:text-orange-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Position Types</h3>
+            <div class="space-y-3">
+              <div class="relative bg-gray-100 p-4 rounded h-20">
+                <span
+                  class="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 text-xs rounded"
+                  >absolute top-2 left-2</span
+                >
+              </div>
+              <div class="relative bg-gray-100 p-4 rounded h-20">
+                <span
+                  class="absolute bottom-2 right-2 bg-green-500 text-white px-2 py-1 text-xs rounded"
+                  >absolute bottom-2 right-2</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Z-Index</h3>
+            <div class="relative">
+              <div class="absolute z-10 bg-red-500 w-16 h-16 rounded"></div>
+              <div
+                class="absolute z-20 bg-blue-500 w-16 h-16 rounded ml-8 mt-8"
+              ></div>
+              <div
+                class="absolute z-30 bg-green-500 w-16 h-16 rounded ml-4 mt-4"
+              ></div>
+              <div class="h-24"></div>
+              <p class="text-sm text-gray-600 mt-4">z-10, z-20, z-30</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Sticky Position</h3>
+            <div class="h-32 overflow-y-auto bg-gray-50 p-2 rounded">
+              <div class="sticky top-0 bg-yellow-300 p-2 mb-2 rounded">
+                Sticky Header
+              </div>
+              <div class="space-y-2">
+                <div class="bg-white p-2 rounded">Content 1</div>
+                <div class="bg-white p-2 rounded">Content 2</div>
+                <div class="bg-white p-2 rounded">Content 3</div>
+                <div class="bg-white p-2 rounded">Content 4</div>
+                <div class="bg-white p-2 rounded">Content 5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-cyan-500 pb-2"
+        >
+          Sizing
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/width"
+            target="_blank"
+            class="inline-flex items-center text-cyan-600 hover:text-cyan-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Width</h3>
+            <div class="space-y-3">
+              <div class="w-1/4 bg-blue-200 p-2 rounded text-center">w-1/4</div>
+              <div class="w-1/2 bg-green-200 p-2 rounded text-center">
+                w-1/2
+              </div>
+              <div class="w-3/4 bg-yellow-200 p-2 rounded text-center">
+                w-3/4
+              </div>
+              <div class="w-full bg-red-200 p-2 rounded text-center">
+                w-full
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Height</h3>
+            <div class="flex items-end space-x-2">
+              <div
+                class="w-12 h-8 bg-blue-300 rounded flex items-end justify-center text-xs"
+              >
+                h-8
+              </div>
+              <div
+                class="w-12 h-16 bg-green-300 rounded flex items-end justify-center text-xs"
+              >
+                h-16
+              </div>
+              <div
+                class="w-12 h-24 bg-yellow-300 rounded flex items-end justify-center text-xs"
+              >
+                h-24
+              </div>
+              <div
+                class="w-12 h-32 bg-red-300 rounded flex items-end justify-center text-xs"
+              >
+                h-32
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-rose-500 pb-2"
+        >
+          Borders & Rounded
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/border-radius"
+            target="_blank"
+            class="inline-flex items-center text-rose-600 hover:text-rose-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Border Radius</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-blue-100 p-3 rounded-none text-center text-sm">
+                rounded-none
+              </div>
+              <div class="bg-blue-100 p-3 rounded-sm text-center text-sm">
+                rounded-sm
+              </div>
+              <div class="bg-blue-100 p-3 rounded text-center text-sm">
+                rounded
+              </div>
+              <div class="bg-blue-100 p-3 rounded-lg text-center text-sm">
+                rounded-lg
+              </div>
+              <div class="bg-blue-100 p-3 rounded-xl text-center text-sm">
+                rounded-xl
+              </div>
+              <div class="bg-blue-100 p-3 rounded-full text-center text-sm">
+                rounded-full
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Border Width</h3>
+            <div class="space-y-3">
+              <div class="border bg-gray-50 p-2 rounded">border (1px)</div>
+              <div class="border-2 bg-gray-50 p-2 rounded">border-2 (2px)</div>
+              <div class="border-4 bg-gray-50 p-2 rounded">border-4 (4px)</div>
+              <div class="border-8 bg-gray-50 p-2 rounded">border-8 (8px)</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Border Styles</h3>
+            <div class="space-y-3">
+              <div
+                class="border-2 border-solid border-gray-400 bg-gray-50 p-2 rounded"
+              >
+                border-solid
+              </div>
+              <div
+                class="border-2 border-dashed border-gray-400 bg-gray-50 p-2 rounded"
+              >
+                border-dashed
+              </div>
+              <div
+                class="border-2 border-dotted border-gray-400 bg-gray-50 p-2 rounded"
+              >
+                border-dotted
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-amber-500 pb-2"
+        >
+          Transforms
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/scale"
+            target="_blank"
+            class="inline-flex items-center text-amber-600 hover:text-amber-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Scale</h3>
+            <div class="flex justify-center space-x-2">
+              <div class="w-8 h-8 bg-blue-500 rounded scale-75"></div>
+              <div class="w-8 h-8 bg-green-500 rounded scale-100"></div>
+              <div class="w-8 h-8 bg-red-500 rounded scale-125"></div>
+            </div>
+            <p class="text-xs mt-2">scale-75, scale-100, scale-125</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Rotate</h3>
+            <div class="flex justify-center space-x-2">
+              <div class="w-8 h-8 bg-blue-500 rotate-12"></div>
+              <div class="w-8 h-8 bg-green-500 rotate-45"></div>
+              <div class="w-8 h-8 bg-red-500 rotate-90"></div>
+            </div>
+            <p class="text-xs mt-2">rotate-12, rotate-45, rotate-90</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Skew</h3>
+            <div class="flex justify-center space-x-2">
+              <div class="w-8 h-8 bg-blue-500 skew-x-12"></div>
+              <div class="w-8 h-8 bg-green-500 skew-y-12"></div>
+            </div>
+            <p class="text-xs mt-2">skew-x-12, skew-y-12</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Translate</h3>
+            <div class="relative h-16">
+              <div class="absolute w-8 h-8 bg-blue-500 rounded"></div>
+              <div
+                class="absolute w-8 h-8 bg-green-500 rounded translate-x-4 translate-y-2"
+              ></div>
+            </div>
+            <p class="text-xs mt-2">translate-x-4, translate-y-2</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-violet-500 pb-2"
+        >
+          Filters
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/blur"
+            target="_blank"
+            class="inline-flex items-center text-violet-600 hover:text-violet-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Blur</h3>
+            <div class="space-y-2">
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded mx-auto"
+              ></div>
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded mx-auto blur-sm"
+              ></div>
+              <p class="text-xs">Normal vs blur-sm</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Brightness</h3>
+            <div class="space-y-2">
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded mx-auto brightness-50"
+              ></div>
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded mx-auto brightness-150"
+              ></div>
+              <p class="text-xs">brightness-50 vs brightness-150</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Grayscale</h3>
+            <div class="space-y-2">
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded mx-auto"
+              ></div>
+              <div
+                class="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded mx-auto grayscale"
+              ></div>
+              <p class="text-xs">Normal vs grayscale</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-emerald-500 pb-2"
+        >
+          Backdrop Filters
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/backdrop-blur"
+            target="_blank"
+            class="inline-flex items-center text-emerald-600 hover:text-emerald-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Backdrop Blur</h3>
+            <div
+              class="relative h-32 bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 rounded-lg overflow-hidden"
+            >
+              <div
+                class="absolute inset-4 bg-white/30 backdrop-blur-sm rounded flex items-center justify-center"
+              >
+                <span class="text-white font-semibold">backdrop-blur-sm</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Backdrop Brightness</h3>
+            <div
+              class="relative h-32 bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 rounded-lg overflow-hidden"
+            >
+              <div
+                class="absolute inset-4 bg-black/20 backdrop-brightness-75 rounded flex items-center justify-center"
+              >
+                <span class="text-white font-semibold"
+                  >backdrop-brightness-75</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-lime-500 pb-2"
+        >
+          Tables
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/border-collapse"
+            target="_blank"
+            class="inline-flex items-center text-lime-600 hover:text-lime-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h3 class="text-lg font-semibold mb-4">Table Styles</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full table-auto border-collapse">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Name
+                  </th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Role
+                  </th>
+                  <th class="border border-gray-300 px-4 py-2 text-left">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hover:bg-gray-50">
+                  <td class="border border-gray-300 px-4 py-2">John Doe</td>
+                  <td class="border border-gray-300 px-4 py-2">Developer</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <span
+                      class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"
+                      >Active</span
+                    >
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="border border-gray-300 px-4 py-2">Jane Smith</td>
+                  <td class="border border-gray-300 px-4 py-2">Designer</td>
+                  <td class="border border-gray-300 px-4 py-2">
+                    <span
+                      class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs"
+                      >Pending</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-12">
+        <h2
+          class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-slate-500 pb-2"
+        >
+          Visibility
+        </h2>
+        <div class="mb-4">
+          <a
+            href="https://tailwindcss.com/docs/visibility"
+            target="_blank"
+            class="inline-flex items-center text-slate-600 hover:text-slate-800 text-sm"
+          >
+            📖 Official Documentation
+            <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+              ></path>
+              <path
+                d="M5 5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2a1 1 0 10-2 0v2H5V7h2a1 1 0 000-2H5z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Visibility Control</h3>
+            <div class="space-y-3">
+              <div
+                class="visible bg-green-100 p-2 rounded border-2 border-green-300"
+              >
+                <span class="text-green-700">visible - Always shown</span>
+              </div>
+              <div
+                class="invisible bg-red-100 p-2 rounded border-2 border-red-300"
+              >
+                <span class="text-red-700"
+                  >invisible - Hidden but takes space</span
+                >
+              </div>
+              <p class="text-sm text-gray-600">invisible vs visible</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Display Control</h3>
+            <div class="space-y-3">
+              <div class="block bg-blue-100 p-2 rounded">
+                <span class="text-blue-700">block - Block element</span>
+              </div>
+              <div class="hidden bg-gray-100 p-2 rounded">
+                <span class="text-gray-700">hidden - Completely hidden</span>
+              </div>
+              <div class="inline-block bg-purple-100 p-2 rounded">
+                <span class="text-purple-700">inline-block</span>
+              </div>
+              <p class="text-sm text-gray-600">block, hidden, inline-block</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Opacity</h3>
+            <div class="space-y-3">
+              <div
+                class="opacity-100 bg-indigo-500 p-2 rounded text-white text-center"
+              >
+                opacity-100
+              </div>
+              <div
+                class="opacity-75 bg-indigo-500 p-2 rounded text-white text-center"
+              >
+                opacity-75
+              </div>
+              <div
+                class="opacity-50 bg-indigo-500 p-2 rounded text-white text-center"
+              >
+                opacity-50
+              </div>
+              <div
+                class="opacity-25 bg-indigo-500 p-2 rounded text-white text-center"
+              >
+                opacity-25
+              </div>
+              <div
+                class="opacity-0 bg-indigo-500 p-2 rounded text-white text-center"
+              >
+                opacity-0
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Responsive Visibility</h3>
+            <div class="space-y-3">
+              <div
+                class="hidden md:block bg-green-100 p-2 rounded border-2 border-green-300"
+              >
+                <span class="text-green-700"
+                  >hidden md:block - Hidden on mobile, visible on tablet+</span
+                >
+              </div>
+              <div
+                class="block md:hidden bg-blue-100 p-2 rounded border-2 border-blue-300"
+              >
+                <span class="text-blue-700"
+                  >block md:hidden - Visible on mobile, hidden on tablet+</span
+                >
+              </div>
+              <div
+                class="hidden lg:block bg-purple-100 p-2 rounded border-2 border-purple-300"
+              >
+                <span class="text-purple-700"
+                  >hidden lg:block - Hidden until desktop</span
+                >
+              </div>
+              <p class="text-sm text-gray-600">Resize window to see changes</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">Overflow Control</h3>
+            <div class="space-y-3">
+              <div class="h-16 overflow-hidden bg-gray-100 p-2 rounded">
+                <p class="text-sm">
+                  overflow-hidden - This text is cut off when it goes beyond the
+                  container height. You won't see this part.
+                </p>
+              </div>
+              <div class="h-16 overflow-y-auto bg-gray-100 p-2 rounded">
+                <p class="text-sm">
+                  overflow-y-auto - This text has scrollable overflow. You can
+                  scroll to see more content that doesn't fit in the container.
+                </p>
+              </div>
+              <div class="h-16 overflow-visible bg-gray-100 p-2 rounded">
+                <p class="text-sm">overflow-visible - Content flows outside</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

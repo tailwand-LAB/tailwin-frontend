@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkTrack Pro - Advanced Link Tracking Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .map-container {
+            height: 400px;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .copied {
+            background-color: #10b981 !important;
+            color: white !important;
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #4f46e5;
+            transition: width 0.5s ease;
+        }
+        .link-card:hover .link-actions {
+            opacity: 1;
+        }
+        .link-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .indonesia-marker {
+            background-color: #4f46e5;
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="bg-indigo-600 p-2 rounded-lg mr-3">
+                        <i class="fas fa-link text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900">LinkTrack <span class="text-indigo-600">Pro</span></h1>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-6">
+                        <li><a href="#dashboard" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">Dashboard</a></li>
+                        <li><a href="#links" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">My Links</a></li>
+                        <li><a href="#create-link" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">Create Link</a></li>
+                        <li><a href="#analytics" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">Analytics</a></li>
+                    </ul>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-2">
+                        <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <span class="text-indigo-600 font-medium">JS</span>
+                        </div>
+                        <span class="text-sm font-medium">John Smith</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="mb-12">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
+                        <p class="text-gray-500 text-sm">Track and analyze your link performance in Indonesia</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Last 30 days
+                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Active Links</p>
+                                <h3 class="text-2xl font-semibold mt-1" id="activeLinksCount">0</h3>
+                            </div>
+                            <div class="bg-indigo-100 p-3 rounded-full">
+                                <i class="fas fa-link text-indigo-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">This month</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Total Clicks</p>
+                                <h3 class="text-2xl font-semibold mt-1" id="totalViewsCount">0</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-mouse-pointer text-green-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">This month</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Unique Visitors</p>
+                                <h3 class="text-2xl font-semibold mt-1">0</h3>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-users text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">This month</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Avg. CTR</p>
+                                <h3 class="text-2xl font-semibold mt-1">0%</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-chart-line text-blue-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">This month</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Clicks Over Time Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Clicks Over Time</h3>
+                            <div class="flex space-x-2">
+                                <button class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">Day</button>
+                                <button class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded">Week</button>
+                                <button class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">Month</button>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="clicksChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Locations Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Top Cities in Indonesia</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="locationsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Top Links -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Activity -->
+                    <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
+                        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">See All</button>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <div id="activity-list" class="divide-y divide-gray-200">
+                                <!-- Activity items will be added here by JavaScript -->
+                                <div class="px-6 py-4 text-center text-gray-500" id="no-activity">
+                                    No activity yet. Create your first link to start tracking.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Performing Links -->
+                    <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
+                        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">Top Performing Links</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                        </div>
+                        <div class="divide-y divide-gray-200" id="top-links-list">
+                            <div class="px-6 py-4 text-center text-gray-500">
+                                No links created yet
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Links Section -->
+            <section id="links" class="mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">My Tracking Links</h2>
+                        <p class="text-gray-500 text-sm">Manage and analyze your shortened links</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <div class="relative">
+                            <input type="text" placeholder="Search links..." class="pl-8 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            New Link
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Links Table -->
+                <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-lg font-medium text-gray-900">All Links</h3>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <span class="mr-2">Showing</span>
+                                <select class="border-0 bg-transparent pr-6 focus:ring-2 focus:ring-indigo-500">
+                                    <option>10</option>
+                                    <option>25</option>
+                                    <option>50</option>
+                                </select>
+                                <span class="ml-2">of <span id="total-links-count">0</span> links</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="p-2 rounded hover:bg-gray-100">
+                                    <i class="fas fa-chevron-left text-gray-500"></i>
+                                </button>
+                                <button class="p-2 rounded hover:bg-gray-100">
+                                    <i class="fas fa-chevron-right text-gray-500"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Short Link</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="links-table-body">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                        No links created yet. Create your first link to start tracking.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Link Section -->
+            <section id="create-link" class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Create New Tracking Link</h2>
+                <p class="text-gray-500 text-sm mb-6">Shorten URLs and track clicks with advanced analytics focused on Indonesia</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Main Form -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white shadow-sm rounded-lg p-6 border border-gray-100">
+                            <form id="linkForm">
+                                <div class="mb-4">
+                                    <label for="destination" class="block text-sm font-medium text-gray-700 mb-1">Destination URL*</label>
+                                    <input type="url" id="destination" name="destination" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="https://example.com/my-long-url">
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="linkName" class="block text-sm font-medium text-gray-700 mb-1">Link Name</label>
+                                        <input type="text" id="linkName" name="linkName"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="e.g. Summer Sale Campaign">
+                                    </div>
+                                    <div>
+                                        <label for="customSlug" class="block text-sm font-medium text-gray-700 mb-1">Custom Back-Half (Optional)</label>
+                                        <div class="flex">
+                                            <span class="inline-flex items-center px-3 py-2 border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-l-md">track.link/</span>
+                                            <input type="text" id="customSlug" name="customSlug"
+                                                class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                                placeholder="summer-sale">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Options</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="trackLocation" name="trackLocation" type="checkbox" checked
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="trackLocation" class="font-medium text-gray-700">Location Tracking</label>
+                                                <p class="text-gray-500">City and province in Indonesia</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="trackDevice" name="trackDevice" type="checkbox" checked
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="trackDevice" class="font-medium text-gray-700">Device Info</label>
+                                                <p class="text-gray-500">Browser, OS, and device type</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="trackReferrer" name="trackReferrer" type="checkbox"
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="trackReferrer" class="font-medium text-gray-700">Referrer Data</label>
+                                                <p class="text-gray-500">Source website or platform</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex items-center h-5">
+                                                <input id="trackUTM" name="trackUTM" type="checkbox" checked
+                                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="trackUTM" class="font-medium text-gray-700">UTM Parameters</label>
+                                                <p class="text-gray-500">Campaign, source, and medium tracking</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Expiration (Optional)</label>
+                                    <div class="flex space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="expiration" value="none" checked
+                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2 text-sm text-gray-700">Never</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="expiration" value="date"
+                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2 text-sm text-gray-700">On date</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="expiration" value="clicks"
+                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2 text-sm text-gray-700">After clicks</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-between items-center">
+                                    <div class="text-sm text-gray-500">
+                                        <i class="fas fa-lock mr-1"></i> All data is encrypted and secure
+                                    </div>
+                                    <button type="submit"
+                                        class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Create Tracking Link
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Card -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white shadow-sm rounded-lg p-6 border border-gray-100 sticky top-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Link Preview</h3>
+                            <div class="bg-gray-50 p-4 rounded-md mb-4">
+                                <div class="text-sm text-gray-500 mb-1">Destination URL</div>
+                                <div class="text-sm font-medium text-gray-900 truncate" id="preview-destination">Enter URL to preview</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-md mb-4">
+                                <div class="text-sm text-gray-500 mb-1">Short Link</div>
+                                <div class="text-sm font-medium text-indigo-600 truncate" id="preview-shortlink">track.link/example</div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Link Name</span>
+                                    <span class="font-medium text-gray-900" id="preview-name">Not specified</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Status</span>
+                                    <span class="font-medium text-green-600">Active</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Created</span>
+                                    <span class="font-medium text-gray-900">Just now</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Expires</span>
+                                    <span class="font-medium text-gray-900">Never</span>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium" id="preview-copy-btn" disabled>
+                                    <i class="fas fa-copy mr-2"></i> Copy Link
+                                </button>
+                                <button class="w-full mt-2 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium" id="preview-share-btn" disabled>
+                                    <i class="fas fa-share-alt mr-2"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generated Link Display -->
+                <div id="linkResult" class="bg-white shadow-sm rounded-lg p-6 mt-6 hidden border border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Your Tracking Link is Ready!</h3>
+                        <div class="flex space-x-3">
+                            <button class="text-gray-500 hover:text-gray-700" id="generate-qr">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-gray-700" id="share-link">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <input id="trackingLink" readonly
+                            class="flex-grow px-3 py-3 border border-gray-300 rounded-l-md bg-gray-50 text-gray-700 text-sm focus:outline-none">
+                        <button id="copyButton"
+                            class="px-4 py-3 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-700 hover:bg-gray-200 text-sm font-medium transition-colors flex items-center">
+                            <i class="fas fa-copy mr-2"></i> Copy
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-indigo-50 p-4 rounded-md">
+                            <div class="flex items-center">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-chart-line text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">ANALYTICS</div>
+                                    <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500" id="view-analytics">View Dashboard</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-md">
+                            <div class="flex items-center">
+                                <div class="bg-green-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-external-link-alt text-green-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">TEST LINK</div>
+                                    <a id="testLink" href="#" target="_blank" class="text-sm font-medium text-green-600 hover:text-green-500">Open in New Tab</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-md">
+                            <div class="flex items-center">
+                                <div class="bg-purple-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-qrcode text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500">QR CODE</div>
+                                    <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-500" id="download-qr">Download QR Code</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Link Analytics</h2>
+                        <p class="text-gray-500 text-sm" id="analytics-link-title">Select a link to view analytics</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button class="bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Last 7 days
+                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Export Report
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8" id="analytics-stats">
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Total Clicks</p>
+                                <h3 class="text-2xl font-semibold mt-1">0</h3>
+                            </div>
+                            <div class="bg-indigo-100 p-3 rounded-full">
+                                <i class="fas fa-mouse-pointer text-indigo-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">vs previous period</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Unique Visitors</p>
+                                <h3 class="text-2xl font-semibold mt-1">0</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-users text-green-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">vs previous period</span>
+                                <span class="font-medium text-gray-500">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Top City</p>
+                                <h3 class="text-2xl font-semibold mt-1">-</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">Clicks from city</span>
+                                <span class="font-medium text-gray-900">0</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm card-hover border border-gray-100">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Top Device</p>
+                                <h3 class="text-2xl font-semibold mt-1">-</h3>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-mobile-alt text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-500">Device clicks</span>
+                                <span class="font-medium text-gray-900">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Analytics Content -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Clicks Over Time -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Clicks Over Time</h3>
+                            <div class="flex space-x-2">
+                                <button class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">Day</button>
+                                <button class="text-xs px-2 py-1 bg-indigo-100 text-indigo-700 rounded">Week</button>
+                                <button class="text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">Month</button>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="analyticsClicksChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Referrers -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Top Referrers</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                        </div>
+                        <div class="space-y-4" id="referrers-list">
+                            <div class="text-center text-gray-500 py-4">
+                                No referrer data available
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Locations Map -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Locations in Indonesia</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                        </div>
+                        <div class="map-container">
+                            <div id="analyticsMap" style="height: 100%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Devices -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Devices</h3>
+                            <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="devicesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Clicks Table -->
+                <div class="mt-8 bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-lg font-medium text-gray-900">Recent Clicks</h3>
+                        <button class="text-sm text-indigo-600 hover:text-indigo-500">View All</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referrer</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="clicks-table-body">
+                                <tr>
+                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        No click data available
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">LinkTrack Pro</h3>
+                        <p class="mt-4 text-sm text-gray-500">Advanced link tracking and analytics focused on Indonesia.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Product</h3>
+                        <ul class="mt-4 space-y-2">
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Features</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Pricing</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">API</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Integrations</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Resources</h3>
+                        <ul class="mt-4 space-y-2">
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Documentation</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Guides</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Blog</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Support</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
+                        <ul class="mt-4 space-y-2">
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">About</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Careers</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Privacy</a></li>
+                            <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600">Terms</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-sm text-gray-500">© 2023 LinkTrack Pro. All rights reserved.</p>
+                    <div class="mt-4 md:mt-0 flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-gray-700">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Data storage for links and clicks
+        const linkData = {
+            links: [],
+            clicks: [],
+            currentLinkId: null
+        };
+
+        // Initialize charts and map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize empty charts
+            initializeCharts();
+            
+            // Initialize map centered on Indonesia
+            initializeMap();
+            
+            // Form preview updates
+            setupFormPreview();
+            
+            // Link form submission
+            setupLinkForm();
+            
+            // Copy button functionality
+            setupCopyButton();
+            
+            // Load any saved data from localStorage
+            loadSavedData();
+            
+            // Update UI with loaded data
+            updateUI();
+        });
+
+        function initializeCharts() {
+            // Dashboard Clicks Chart
+            const clicksCtx = document.getElementById('clicksChart').getContext('2d');
+            window.clicksChart = new Chart(clicksCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Clicks',
+                        data: [],
+                        backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#4f46e5',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Dashboard Locations Chart
+            const locationsCtx = document.getElementById('locationsChart').getContext('2d');
+            window.locationsChart = new Chart(locationsCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Clicks',
+                        data: [],
+                        backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Analytics Clicks Chart
+            const analyticsClicksCtx = document.getElementById('analyticsClicksChart').getContext('2d');
+            window.analyticsClicksChart = new Chart(analyticsClicksCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Clicks',
+                        data: [],
+                        backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                        borderColor: '#4f46e5',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#4f46e5',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }, {
+                        label: 'Unique',
+                        data: [],
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        borderColor: '#10b981',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#10b981',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Devices Chart
+            const devicesCtx = document.getElementById('devicesChart').getContext('2d');
+            window.devicesChart = new Chart(devicesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#4f46e5',
+                            '#10b981',
+                            '#f59e0b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        function initializeMap() {
+            // Center on Indonesia
+            const map = L.map('analyticsMap').setView([-2.5489, 118.0149], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Store map reference
+            window.analyticsMap = map;
+        }
+
+        function setupFormPreview() {
+            const destinationInput = document.getElementById('destination');
+            const linkNameInput = document.getElementById('linkName');
+            const customSlugInput = document.getElementById('customSlug');
+            
+            const previewDestination = document.getElementById('preview-destination');
+            const previewName = document.getElementById('preview-name');
+            const previewShortlink = document.getElementById('preview-shortlink');
+            
+            destinationInput.addEventListener('input', function() {
+                previewDestination.textContent = this.value || 'Enter URL to preview';
+            });
+            
+            linkNameInput.addEventListener('input', function() {
+                previewName.textContent = this.value || 'Not specified';
+            });
+            
+            customSlugInput.addEventListener('input', function() {
+                const slug = this.value || 'example';
+                previewShortlink.textContent = `track.link/${slug}`;
+            });
+        }
+
+        function setupLinkForm() {
+            const linkForm = document.getElementById('linkForm');
+            const linkResult = document.getElementById('linkResult');
+            const trackingLinkInput = document.getElementById('trackingLink');
+            const testLink = document.getElementById('testLink');
+            const viewAnalyticsLink = document.getElementById('view-analytics');
+            
+            linkForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const destination = document.getElementById('destination').value;
+                const linkName = document.getElementById('linkName').value;
+                const customSlug = document.getElementById('customSlug').value;
+                const trackLocation = document.getElementById('trackLocation').checked;
+                const trackDevice = document.getElementById('trackDevice').checked;
+                const trackReferrer = document.getElementById('trackReferrer').checked;
+                const trackUTM = document.getElementById('trackUTM').checked;
+                
+                // Generate a tracking URL
+                const slug = customSlug || generateSlug();
+                const trackingUrl = `https://track.link/${slug}`;
+                
+                // Create link object
+                const linkId = generateId();
+                const newLink = {
+                    id: linkId,
+                    name: linkName || `Link ${linkData.links.length + 1}`,
+                    destination: destination,
+                    shortUrl: trackingUrl,
+                    slug: slug,
+                    createdAt: new Date().toISOString(),
+                    clicks: 0,
+                    trackingOptions: {
+                        location: trackLocation,
+                        device: trackDevice,
+                        referrer: trackReferrer,
+                        utm: trackUTM
+                    }
+                };
+                
+                // Add to storage
+                linkData.links.push(newLink);
+                linkData.currentLinkId = linkId;
+                
+                // Save to localStorage
+                saveData();
+                
+                // Show the result
+                trackingLinkInput.value = trackingUrl;
+                testLink.href = trackingUrl;
+                viewAnalyticsLink.href = `#analytics`;
+                linkResult.classList.remove('hidden');
+                
+                // Enable preview buttons
+                document.getElementById('preview-copy-btn').disabled = false;
+                document.getElementById('preview-share-btn').disabled = false;
+                
+                // Update UI
+                updateUI();
+                
+                // Scroll to result
+                linkResult.scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset form
+                linkForm.reset();
+            });
+        }
+
+        function setupCopyButton() {
+            const copyButton = document.getElementById('copyButton');
+            const trackingLinkInput = document.getElementById('trackingLink');
+            
+            copyButton.addEventListener('click', function() {
+                const link = trackingLinkInput.value;
+                navigator.clipboard.writeText(link).then(() => {
+                    copyButton.innerHTML = '<i class="fas fa-check mr-2"></i> Copied';
+                    copyButton.classList.add('copied');
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fas fa-copy mr-2"></i> Copy';
+                        copyButton.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+        }
+
+        function generateSlug() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateId() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem('linkTrackData', JSON.stringify(linkData));
+        }
+
+        function loadSavedData() {
+            const savedData = localStorage.getItem('linkTrackData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                linkData.links = parsedData.links || [];
+                linkData.clicks = parsedData.clicks || [];
+                
+                // If there was a current link being viewed, try to restore it
+                if (parsedData.currentLinkId) {
+                    const linkExists = linkData.links.some(link => link.id === parsedData.currentLinkId);
+                    if (linkExists) {
+                        linkData.currentLinkId = parsedData.currentLinkId;
+                    }
+                }
+            }
+        }
+
+        function updateUI() {
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Update links table
+            updateLinksTable();
+            
+            // Update top links list
+            updateTopLinksList();
+            
+            // Update analytics if a link is selected
+            if (linkData.currentLinkId) {
+                updateAnalytics(linkData.currentLinkId);
+            }
+        }
+
+        function updateDashboardStats() {
+            const totalClicks = linkData.clicks.length;
+            const uniqueVisitors = new Set(linkData.clicks.map(click => click.ip)).size;
+            const activeLinks = linkData.links.length;
+            
+            document.getElementById('totalViewsCount').textContent = totalClicks;
+            document.getElementById('activeLinksCount').textContent = activeLinks;
+            document.querySelector('#dashboard .bg-purple-100 + div h3').textContent = uniqueVisitors;
+            
+            // Update charts with real data
+            updateDashboardCharts();
+        }
+
+        function updateDashboardCharts() {
+            // Update clicks over time chart
+            const clicksByDay = groupClicksByDay(linkData.clicks);
+            window.clicksChart.data.labels = Object.keys(clicksByDay);
+            window.clicksChart.data.datasets[0].data = Object.values(clicksByDay);
+            window.clicksChart.update();
+            
+            // Update locations chart (top 5 cities in Indonesia)
+            const clicksByCity = groupClicksByCity(linkData.clicks);
+            const topCities = Object.entries(clicksByCity)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .map(entry => entry[0]);
+            
+            const cityClicks = topCities.map(city => clicksByCity[city]);
+            
+            window.locationsChart.data.labels = topCities;
+            window.locationsChart.data.datasets[0].data = cityClicks;
+            window.locationsChart.update();
+        }
+
+        function groupClicksByDay(clicks) {
+            const result = {};
+            
+            // Initialize with empty days for the last 7 days
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                result[dateStr] = 0;
+            }
+            
+            // Count clicks per day
+            clicks.forEach(click => {
+                const date = new Date(click.timestamp);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                if (result[dateStr] !== undefined) {
+                    result[dateStr]++;
+                }
+            });
+            
+            return result;
+        }
+
+        function groupClicksByCity(clicks) {
+            const result = {};
+            
+            clicks.forEach(click => {
+                if (click.location && click.location.city) {
+                    const city = click.location.city;
+                    result[city] = (result[city] || 0) + 1;
+                }
+            });
+            
+            return result;
+        }
+
+        function updateLinksTable() {
+            const tbody = document.getElementById('links-table-body');
+            const totalLinksCount = document.getElementById('total-links-count');
+            
+            totalLinksCount.textContent = linkData.links.length;
+            
+            if (linkData.links.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            No links created yet. Create your first link to start tracking.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            linkData.links.forEach(link => {
+                const linkClicks = linkData.clicks.filter(click => click.linkId === link.id).length;
+                const createdAt = new Date(link.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-link text-indigo-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${link.name}</div>
+                                <div class="text-sm text-gray-500 truncate" style="max-width: 200px;">${link.destination}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-indigo-600">${link.shortUrl}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${linkClicks}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${createdAt}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="flex justify-end space-x-3">
+                            <button class="text-indigo-600 hover:text-indigo-900 view-analytics" data-linkid="${link.id}">
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                            <button class="text-gray-600 hover:text-gray-900 copy-link" data-link="${link.shortUrl}">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners to the new buttons
+            document.querySelectorAll('.view-analytics').forEach(button => {
+                button.addEventListener('click', function() {
+                    const linkId = this.getAttribute('data-linkid');
+                    linkData.currentLinkId = linkId;
+                    saveData();
+                    updateAnalytics(linkId);
+                    document.getElementById('analytics').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            document.querySelectorAll('.copy-link').forEach(button => {
+                button.addEventListener('click', function() {
+                    const link = this.getAttribute('data-link');
+                    navigator.clipboard.writeText(link).then(() => {
+                        const icon = this.querySelector('i');
+                        icon.className = 'fas fa-check';
+                        setTimeout(() => {
+                            icon.className = 'fas fa-copy';
+                        }, 2000);
+                    });
+                });
+            });
+        }
+
+        function updateTopLinksList() {
+            const topLinksList = document.getElementById('top-links-list');
+            
+            if (linkData.links.length === 0) {
+                topLinksList.innerHTML = `
+                    <div class="px-6 py-4 text-center text-gray-500">
+                        No links created yet
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort links by click count (descending)
+            const sortedLinks = [...linkData.links].sort((a, b) => {
+                const aClicks = linkData.clicks.filter(click => click.linkId === a.id).length;
+                const bClicks = linkData.clicks.filter(click => click.linkId === b.id).length;
+                return bClicks - aClicks;
+            }).slice(0, 4); // Top 4 links
+            
+            topLinksList.innerHTML = '';
+            
+            sortedLinks.forEach(link => {
+                const clicks = linkData.clicks.filter(click => click.linkId === link.id).length;
+                
+                const colors = ['indigo', 'green', 'purple', 'blue'];
+                const color = colors[sortedLinks.indexOf(link) % colors.length];
+                
+                const item = document.createElement('div');
+                item.className = 'px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors';
+                item.innerHTML = `
+                    <div class="flex items-center min-w-0">
+                        <div class="bg-${color}-100 p-2 rounded mr-3">
+                            <i class="fas fa-link text-${color}-600 text-sm"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">${link.name}</p>
+                            <p class="text-xs text-gray-500 truncate">${link.shortUrl}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-900">${clicks}</p>
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    linkData.currentLinkId = link.id;
+                    saveData();
+                    updateAnalytics(link.id);
+                    document.getElementById('analytics').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                topLinksList.appendChild(item);
+            });
+        }
+
+        function updateAnalytics(linkId) {
+            const link = linkData.links.find(l => l.id === linkId);
+            if (!link) return;
+            
+            // Update title
+            document.getElementById('analytics-link-title').textContent = `Detailed insights for "${link.name}"`;
+            
+            // Get clicks for this link
+            const linkClicks = linkData.clicks.filter(click => click.linkId === linkId);
+            const uniqueVisitors = new Set(linkClicks.map(click => click.ip)).size;
+            
+            // Update stats cards
+            document.querySelector('#analytics-stats .bg-indigo-100 + div h3').textContent = linkClicks.length;
+            document.querySelector('#analytics-stats .bg-green-100 + div h3').textContent = uniqueVisitors;
+            
+            // Update top city
+            const cityClicks = {};
+            linkClicks.forEach(click => {
+                if (click.location && click.location.city) {
+                    const city = click.location.city;
+                    cityClicks[city] = (cityClicks[city] || 0) + 1;
+                }
+            });
+            
+            let topCity = '-';
+            let topCityClicks = 0;
+            if (Object.keys(cityClicks).length > 0) {
+                const sortedCities = Object.entries(cityClicks).sort((a, b) => b[1] - a[1]);
+                topCity = sortedCities[0][0];
+                topCityClicks = sortedCities[0][1];
+            }
+            
+            document.querySelector('#analytics-stats .bg-blue-100 + div h3').textContent = topCity;
+            document.querySelector('#analytics-stats .bg-blue-100 + div + div .progress-fill').style.width = 
+                `${(topCityClicks / linkClicks.length * 100) || 0}%`;
+            document.querySelector('#analytics-stats .bg-blue-100 + div + div span:last-child').textContent = 
+                `${topCityClicks}`;
+            
+            // Update top device
+            const deviceClicks = {};
+            linkClicks.forEach(click => {
+                if (click.device) {
+                    deviceClicks[click.device] = (deviceClicks[click.device] || 0) + 1;
+                }
+            });
+            
+            let topDevice = '-';
+            let topDevicePercentage = 0;
+            if (Object.keys(deviceClicks).length > 0) {
+                const sortedDevices = Object.entries(deviceClicks).sort((a, b) => b[1] - a[1]);
+                topDevice = sortedDevices[0][0];
+                topDevicePercentage = Math.round((sortedDevices[0][1] / linkClicks.length) * 100);
+            }
+            
+            document.querySelector('#analytics-stats .bg-purple-100 + div h3').textContent = topDevice;
+            document.querySelector('#analytics-stats .bg-purple-100 + div + div .progress-fill').style.width = 
+                `${topDevicePercentage}%`;
+            document.querySelector('#analytics-stats .bg-purple-100 + div + div span:last-child').textContent = 
+                `${topDevicePercentage}%`;
+            
+            // Update clicks over time chart
+            const clicksByDay = groupClicksByDay(linkClicks);
+            window.analyticsClicksChart.data.labels = Object.keys(clicksByDay);
+            window.analyticsClicksChart.data.datasets[0].data = Object.values(clicksByDay);
+            
+            // For demo purposes, unique visitors is just 70% of clicks
+            const uniqueByDay = {};
+            Object.keys(clicksByDay).forEach(day => {
+                uniqueByDay[day] = Math.floor(clicksByDay[day] * 0.7);
+            });
+            window.analyticsClicksChart.data.datasets[1].data = Object.values(uniqueByDay);
+            window.analyticsClicksChart.update();
+            
+            // Update referrers list
+            const referrerList = document.getElementById('referrers-list');
+            const referrerCounts = {};
+            
+            linkClicks.forEach(click => {
+                const referrer = click.referrer || 'Direct / None';
+                referrerCounts[referrer] = (referrerCounts[referrer] || 0) + 1;
+            });
+            
+            if (Object.keys(referrerCounts).length === 0) {
+                referrerList.innerHTML = `
+                    <div class="text-center text-gray-500 py-4">
+                        No referrer data available
+                    </div>
+                `;
+            } else {
+                referrerList.innerHTML = '';
+                
+                // Sort by click count (descending)
+                const sortedReferrers = Object.entries(referrerCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5); // Top 5 referrers
+                
+                sortedReferrers.forEach(([referrer, count]) => {
+                    const percentage = Math.round((count / linkClicks.length) * 100);
+                    
+                    const item = document.createElement('div');
+                    item.innerHTML = `
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>${referrer}</span>
+                            <span class="font-medium">${count} (${percentage}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    `;
+                    
+                    referrerList.appendChild(item);
+                });
+            }
+            
+            // Update devices chart
+            const deviceTypes = {
+                'Mobile': 0,
+                'Desktop': 0,
+                'Tablet': 0
+            };
+            
+            linkClicks.forEach(click => {
+                if (click.device) {
+                    const device = click.device.toLowerCase();
+                    if (device.includes('mobile')) {
+                        deviceTypes['Mobile']++;
+                    } else if (device.includes('tablet')) {
+                        deviceTypes['Tablet']++;
+                    } else {
+                        deviceTypes['Desktop']++;
+                    }
+                }
+            });
+            
+            window.devicesChart.data.labels = Object.keys(deviceTypes);
+            window.devicesChart.data.datasets[0].data = Object.values(deviceTypes);
+            window.devicesChart.update();
+            
+            // Update map with click locations in Indonesia
+            updateMapWithLocations(linkClicks);
+            
+            // Update recent clicks table
+            updateRecentClicksTable(linkClicks);
+        }
+
+        function updateMapWithLocations(clicks) {
+            // Clear existing markers
+            if (window.analyticsMapMarkers) {
+                window.analyticsMapMarkers.forEach(marker => {
+                    window.analyticsMap.removeLayer(marker);
+                });
+            }
+            
+            window.analyticsMapMarkers = [];
+            
+            // Group clicks by city and get coordinates
+            const cityGroups = {};
+            
+            clicks.forEach(click => {
+                if (click.location && click.location.city && click.location.lat && click.location.lng) {
+                    const cityKey = `${click.location.city}_${click.location.lat}_${click.location.lng}`;
+                    
+                    if (!cityGroups[cityKey]) {
+                        cityGroups[cityKey] = {
+                            city: click.location.city,
+                            lat: click.location.lat,
+                            lng: click.location.lng,
+                            count: 0
+                        };
+                    }
+                    
+                    cityGroups[cityKey].count++;
+                }
+            });
+            
+            // Add markers for each city
+            Object.values(cityGroups).forEach(city => {
+                // Create a custom marker
+                const marker = L.marker([city.lat, city.lng], {
+                    icon: L.divIcon({
+                        className: 'indonesia-marker',
+                        html: city.count,
+                        iconSize: [30 + Math.sqrt(city.count) * 2, 30 + Math.sqrt(city.count) * 2]
+                    })
+                });
+                
+                marker.addTo(window.analyticsMap)
+                    .bindPopup(`<b>${city.city}</b><br>${city.count} clicks`);
+                
+                window.analyticsMapMarkers.push(marker);
+            });
+            
+            // Fit map to markers if there are any
+            if (window.analyticsMapMarkers.length > 0) {
+                const group = new L.featureGroup(window.analyticsMapMarkers);
+                window.analyticsMap.fitBounds(group.getBounds().pad(0.5));
+            } else {
+                // Default view of Indonesia
+                window.analyticsMap.setView([-2.5489, 118.0149], 5);
+            }
+        }
+
+        function updateRecentClicksTable(clicks) {
+            const tbody = document.getElementById('clicks-table-body');
+            
+            // Sort by timestamp (newest first)
+            const sortedClicks = [...clicks].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            ).slice(0, 5); // Show only 5 most recent
+            
+            if (sortedClicks.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            No click data available
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            sortedClicks.forEach(click => {
+                const timeAgo = getTimeAgo(new Date(click.timestamp));
+                const city = click.location?.city || 'Unknown';
+                const province = click.location?.province || 'Indonesia';
+                const device = click.device || 'Unknown';
+                const referrer = click.referrer || 'Direct / None';
+                const ip = click.ip || 'Unknown';
+                
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${timeAgo}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">${city}</div>
+                                <div class="text-xs text-gray-500">${province}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <i class="fas ${getDeviceIcon(device)} text-gray-700 mr-2"></i>
+                            <div class="text-sm text-gray-900">${device}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${referrer}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${ip}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function getDeviceIcon(device) {
+            if (!device) return 'fa-desktop';
+            
+            const lowerDevice = device.toLowerCase();
+            
+            if (lowerDevice.includes('iphone') || lowerDevice.includes('android')) {
+                return 'fa-mobile-alt';
+            } else if (lowerDevice.includes('ipad') || lowerDevice.includes('tablet')) {
+                return 'fa-tablet-alt';
+            } else if (lowerDevice.includes('mac') || lowerDevice.includes('windows')) {
+                return 'fa-desktop';
+            } else {
+                return 'fa-desktop';
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return `${diffInSeconds} seconds ago`;
+            }
+            
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            if (diffInMinutes < 60) {
+                return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+            }
+            
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+            }
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+        }
+
+        // Simulate click tracking - this would be replaced with actual tracking in production
+        function simulateClickTracking() {
+            // This function would be called when someone clicks a tracking link
+            // For demo purposes, we'll simulate some clicks
+            
+            if (linkData.links.length === 0) return;
+            
+            // Major cities in Indonesia with coordinates
+            const indonesianCities = [
+                { city: 'Jakarta', province: 'DKI Jakarta', lat: -6.2088, lng: 106.8456 },
+                { city: 'Surabaya', province: 'East Java', lat: -7.2575, lng: 112.7521 },
+                { city: 'Bandung', province: 'West Java', lat: -6.9175, lng: 107.6191 },
+                { city: 'Medan', province: 'North Sumatra', lat: 3.5952, lng: 98.6722 },
+                { city: 'Semarang', province: 'Central Java', lat: -6.9667, lng: 110.4167 },
+                { city: 'Makassar', province: 'South Sulawesi', lat: -5.1477, lng: 119.4327 },
+                { city: 'Palembang', province: 'South Sumatra', lat: -2.9909, lng: 104.7565 },
+                { city: 'Denpasar', province: 'Bali', lat: -8.6705, lng: 115.2126 },
+                { city: 'Batam', province: 'Riau Islands', lat: 1.0456, lng: 104.0305 },
+                { city: 'Pekanbaru', province: 'Riau', lat: 0.5071, lng: 101.4478 }
+            ];
+            
+            // Possible devices
+            const devices = [
+                'iPhone',
+                'Android Phone',
+                'iPad',
+                'Android Tablet',
+                'Windows PC',
+                'Mac'
+            ];
+            
+            // Possible referrers
+            const referrers = [
+                'Direct / None',
+                'facebook.com',
+                'twitter.com',
+                'instagram.com',
+                'whatsapp.com',
+                'google.com'
+            ];
+            
+            // Simulate 5-15 clicks per link
+            linkData.links.forEach(link => {
+                const clickCount = 5 + Math.floor(Math.random() * 11);
+                
+                for (let i = 0; i < clickCount; i++) {
+                    // Random time in the last 7 days
+                    const timestamp = new Date();
+                    timestamp.setDate(timestamp.getDate() - Math.floor(Math.random() * 7));
+                    timestamp.setHours(Math.floor(Math.random() * 24));
+                    timestamp.setMinutes(Math.floor(Math.random() * 60));
+                    
+                    // Random city in Indonesia
+                    const city = indonesianCities[Math.floor(Math.random() * indonesianCities.length)];
+                    
+                    const click = {
+                        id: generateId(),
+                        linkId: link.id,
+                        timestamp: timestamp.toISOString(),
+                        ip: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                        location: {
+                            city: city.city,
+                            province: city.province,
+                            lat: city.lat + (Math.random() * 0.2 - 0.1), // Add some variance
+                            lng: city.lng + (Math.random() * 0.2 - 0.1)  // Add some variance
+                        },
+                        device: devices[Math.floor(Math.random() * devices.length)],
+                        referrer: referrers[Math.floor(Math.random() * referrers.length)]
+                    };
+                    
+                    linkData.clicks.push(click);
+                }
+            });
+            
+            saveData();
+            updateUI();
+        }
+
+        // For demo purposes, let's simulate some data after a short delay
+        setTimeout(() => {
+            simulateClickTracking();
+        }, 1500);
+    </script>
+</body>
+</html>
